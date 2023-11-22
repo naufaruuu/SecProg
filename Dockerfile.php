@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 # Disable interactive installation
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Installing apache2, mysql, php, netcat and supervisor
+# Installing apache2, php
 RUN apt-get update \
     && apt-get install -y apache2 php8.1 php8.1-mysql \
     && apt-get -y autoremove \
