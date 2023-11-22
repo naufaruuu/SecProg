@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # Webserver Container
+  tadika_php:
+    container_name: tadika_php
+    build:
+      context: .
+      dockerfile: Dockerfile.php
+    ports:
+      - 1234:80
+    restart: always
+    volumes:
+      - ./Decoy_Mesra-x_x-:/var/www/html
+    networks:
+      - tadika-network
+    depends_on:
+      - tadika_db
+    environment:
+      - DB_DSN=mysql:host=tadika_db;dbname=tadika_mesra
+      - DB_USER=secureprog
+      - DB_PASSWORD=verysecure
+    entrypoint: ["/bin/bash", "-c", "sleep 20 && php migrations.php && php -S 0.0.0.0:80 -t /var/www/html/public"]
+
+  # Database Container
+  tadika_db:
+    container_name: tadika_db
+    image: mysql:latest
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=tadika_mesra
+      - MYSQL_USER=secureprog
+      - MYSQL_PASSWORD=verysecure
+    networks:
+      - tadika-network
+
+  # if you need to manage db easily
+
+  # tadika_phpma:
+  #   container_name: tadika_phpma
+  #   image: phpmyadmin/phpmyadmin
+  #   ports:
+  #       - '8080:80'
+  #   restart: always
+  #   networks:
+  #     - tadika-network
+  #   environment:
+  #       PMA_HOST: tadika_db
+  #       PMA_USER: secureprog
+  #       PMA_PASSWORD: verysecure
+  #   depends_on:
+  #       - tadika_db
+
+networks:
+  tadika-network:
+    driver: bridge
