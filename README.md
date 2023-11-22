@@ -7,7 +7,7 @@ Secure Programming Assignment
 
 2. Install Docker and Docker Compose
 
-3. Simply run this code
+3. Simply run this command
 
 ```bash
   docker compose up -d
