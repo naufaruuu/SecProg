@@ -1,5 +1,5 @@
 <?php
-
+namespace app\models;
 use app\core\DbModel;
 
 class User extends DbModel
@@ -15,9 +15,14 @@ class User extends DbModel
     public string $password = '';
     public string $confirmPassword = '';
 
-    public function tableName(): string
+    public static function tableName(): string
     {
         return 'users';
+    }
+
+    public function primaryKey(): string
+    {
+        return 'userID';
     }
 
     public function attributes(): array

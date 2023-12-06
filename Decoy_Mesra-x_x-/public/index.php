@@ -39,9 +39,7 @@ $app->router->get('/login', [AuthController::class, 'login']);
 $app->router->get('/register', [AuthController::class, 'register']);
 $app->router->get('/logout', [SiteController::class, 'logout']);
 
-$app->router->post('/login', [AuthController::class, 'login']);
 $app->router->post('/contact', [SiteController::class, 'handleContact']);
-$app->router->post('/register', [AuthController::class, 'register']);
 
 
 
