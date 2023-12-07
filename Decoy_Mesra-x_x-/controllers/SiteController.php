@@ -6,6 +6,8 @@ namespace app\controllers;
 use app\core\Controller;
 use app\core\Application;
 use app\core\Request;
+use app\models\SaranGuru;
+use app\core\Session;
 
 class SiteController extends Controller
 {
@@ -34,10 +36,29 @@ class SiteController extends Controller
     }
 
     
-    public function mapel(): string
+    public function mapel(Request $request): string
     {
+        $saranModel = new SaranGuru();
+        
+        if ($request->getMethod() == 'post') {
+            $saranModel->loadData($request->getBody());
+            $saranModel->ID_Siswa = $_SESSION[Session::FLASH_KEY]['siswa']['value'];
+            $saranModel->findGuru();
+
+            if ($saranModel->validate() && $saranModel->save()) {
+              Application::$app->session->redirect('/mapel');
+            }
+ 
+            return $this->render('mapel', [
+            'model' => $saranModel
+            ]);
+        }
+        
+
         $this->setLayout('murid');
-        return $this->render('mapel');
+        return $this->render('mapel', [
+            'model' => $saranModel
+        ]);
     }
 
     public function transaksi_murid(): string
