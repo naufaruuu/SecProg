@@ -21,6 +21,7 @@ class AuthController extends Controller
     {
         $errors = [];
         $loginModel = new LoginModel();
+
         if ($request->getMethod() == 'post') {
             $loginModel->loadData($request->getBody());
             if ($loginModel->validate() && $loginModel->login()) {
