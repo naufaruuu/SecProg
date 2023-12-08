@@ -33,6 +33,20 @@ abstract class DbModel extends Model
         //echo "hehe";
     }
 
+    public function delete()
+    {
+        $tableName = $this->tableName();
+        $primaryKey = $this->primaryKey();
+        $primaryKeyValue = $this->{$primaryKey};
+
+        $sql = "DELETE FROM $tableName WHERE $primaryKey = :primaryKey";
+        $statement = self::prepare($sql);
+        $statement->bindValue(":primaryKey", $primaryKeyValue);
+
+        return $statement->execute();
+    }
+
+
     public function findPrimaryKeyByAttributes($attribut, $nilai)
 {
     $tableName = $this->tableName();

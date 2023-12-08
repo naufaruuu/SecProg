@@ -158,6 +158,21 @@ class SiteController extends Controller
     {
         Application::$app->response->redirect('/login');
     }
+
+    public function deleteTransaksi(Request $request): string
+    {
+      if ($request->getMethod() == 'post') {
+          $id = $request->getBody()['id'] ?? null;
+          if ($id) {
+              $transaksi = Transaksi::findOne(['ID_Transaksi' => $id])->get();
+              if ($transaksi) {
+                  $transaksi->delete();
+              }
+          }
+      }
+      Application::$app->response->redirect('/transaksi');
+  }
+
 }
 
 ?>
