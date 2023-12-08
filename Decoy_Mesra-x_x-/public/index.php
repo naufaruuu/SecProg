@@ -44,6 +44,7 @@ $app->router->post('/login', [AuthController::class, 'login']);
 $app->router->post('/register', [AuthController::class, 'register']);
 $app->router->post('/mapel', [SiteController::class, 'mapel']);
 $app->router->post('/grading', [SiteController::class, 'grading']);
+$app->router->post('/formTransaksi', [SiteController::class, 'formTransaksi']);
 
 
 $app->run();

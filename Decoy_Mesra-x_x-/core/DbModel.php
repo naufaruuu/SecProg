@@ -17,6 +17,8 @@ abstract class DbModel extends Model
     {
         $tableName = $this->tableName();
         $attributes = $this->attributes();
+        //var_dump($attributes[3]);
+        //die();
 
         $params = array_map(fn($attr) => ":$attr", $attributes);
         $statement = self::prepare("INSERT INTO $tableName (".implode(',', $attributes).")
@@ -24,7 +26,7 @@ abstract class DbModel extends Model
         foreach ($attributes as $attribute) {
             $statement->bindValue(":$attribute", $this->{$attribute});
         }
-        //var_dump($statement);
+        //var_dump($this);
         //die();
 
         $statement->execute();
@@ -55,6 +57,23 @@ abstract class DbModel extends Model
     return $statement->fetchColumn();
 }
 
+    public function findPrimaryKey($attribut)
+    {
+      $tableName = $this->tableName();
+      $primaryKey = $this->primaryKey();
+      $attributes = array_filter($this->attributes(), fn($attr) => $attr !== $primaryKey);
+      $params = array_map(fn($attr) => "$attr = :$attr", $attributes);
+      $sql = "SELECT $primaryKey FROM $tableName WHERE " . implode(' AND ', $params);
+      $statement = self::prepare($sql);
+
+      foreach ($attributes as $attribute) {
+          $statement->bindValue(":$attribute", $this->{$attribute});
+      }
+
+      $statement->execute();
+      return $statement->fetchColumn();
+    }
+
     public function setNextPrimaryKey()
     {
         $primaryKey = $this->primaryKey();
@@ -65,7 +84,7 @@ abstract class DbModel extends Model
         $statement->execute();
 
         $maxPrimaryKey = $statement->fetchColumn();
-        $this->{$primaryKey} = $maxPrimaryKey + 1;
+        $this->{$primaryKey} = (int)$maxPrimaryKey + 1;
     }
 
     public function update()

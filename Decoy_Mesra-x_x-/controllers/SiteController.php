@@ -8,7 +8,8 @@ use app\models\SaranGuru;
 use app\core\Session;
 use app\models\SiswaMapel;
 use app\models\Guru;
-use app\models\Siswa;
+use app\models\Transaksi;
+use app\models\Makanan;
 
 class SiteController extends Controller
 {
@@ -78,9 +79,42 @@ class SiteController extends Controller
         return $this->render('transaksi');
     }
 
-    public function formTransaksi(): string
+    public function formTransaksi(Request $request): string
     { 
-        return $this->render('formTransaksi');
+      $transaksi = new Transaksi();
+      if ($request->getMethod() == 'post') {
+          $transaksi->loadData($request->getBody());
+          $imageExtension = strtolower(pathinfo($_FILES['Image']['name'], PATHINFO_EXTENSION));
+          $allowedExtensions = ['png', 'jpeg', 'jpg'];
+          if (!in_array($imageExtension, $allowedExtensions)) {
+              $transaksi->addError('Image', 'Only PNG and JPEG images are allowed.');
+              return $this->render('formTransaksi', [
+                  'model' => $transaksi
+              ]);
+          }
+          $transaksi->Date = date("Y-m-d");
+          $transaksi->setNextPrimaryKey();
+
+          $makanan = new Makanan();
+          $makanan->Nama_Makanan = $transaksi->Makanan;
+          $makanan_find = $makanan->findPrimaryKey('Nama_Makanan');
+          if ($makanan_find != false) {
+              $transaksi->ID_Makanan = $makanan_find;
+          } else {
+              $makanan->ID_Makanan = 0;
+              $makanan->setNextPrimaryKey();
+              $makanan->save();
+              $transaksi->ID_Makanan = $makanan->ID_Makanan;
+          }
+          $transaksi->ID_Foto = null;
+          $transaksi->save();
+          return $this->render('formTransaksi', [
+              'model' => $transaksi
+          ]);
+      }
+      return $this->render('formTransaksi', [
+          'model' => $transaksi
+      ]);
     }
 
     public function grading(Request $request): string
