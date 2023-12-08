@@ -62,6 +62,23 @@ class QueryBuilder
         $statement->execute();
         return $statement->fetchObject($this->object);
     }
+
+    public function getAll()
+    {
+        $sql = $this->getSql();
+        $statement = Application::$app->db->pdo->prepare($sql);
+
+        // Bind values if there are conditions
+        if (!empty($this->conditions)) {
+            foreach ($this->conditions as $key => $value) {
+                $statement->bindValue(":$key", $value);
+            }
+        }
+
+        $statement->execute();
+
+        return $statement->fetchAll(\PDO::FETCH_CLASS, $this->object);
+    }
 }
 
 ?>

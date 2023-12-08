@@ -1,6 +1,4 @@
 <?php
-
-
 namespace app\controllers;
 
 use app\core\Controller;
@@ -8,6 +6,9 @@ use app\core\Application;
 use app\core\Request;
 use app\models\SaranGuru;
 use app\core\Session;
+use app\models\SiswaMapel;
+use app\models\Guru;
+use app\models\Siswa;
 
 class SiteController extends Controller
 {
@@ -82,9 +83,35 @@ class SiteController extends Controller
         return $this->render('formTransaksi');
     }
 
-    public function grading(): string
+    public function grading(Request $request): string
     { 
-        return $this->render('grading');
+        $siswaMapel = new SiswaMapel();
+        if ($request->getMethod() == 'post') {
+            $siswaMapel->loadData($request->getBody());
+            $guruId = $_SESSION[Session::FLASH_KEY]['guru']['value'];
+            $guru = Guru::findOne(['ID_Guru' => $guruId])->get();
+            $siswaMapel->Nama_Guru = $guru->Nama_Guru;
+            $siswaFind = $siswaMapel->findPrimaryKeyByAttributes('Deskripsi', 'Nilai');
+            if ($siswaFind != false) {
+                $siswaMapel->ID_SiswaMapel = $siswaFind;
+                $siswaMapel->update();    
+                return $this->render('grading', [
+                    'model' => $siswaMapel
+                ]);
+            }
+            $siswaMapel->setNextPrimaryKey();
+
+            if ($siswaMapel->validate() && $siswaMapel->save()) {
+              Application::$app->session->redirect('/grading');
+            }
+ 
+            return $this->render('grading', [
+                'model' => $siswaMapel
+            ]);
+        }
+        return $this->render('grading', [
+            'model' => $siswaMapel
+        ]);
     }
 
     
