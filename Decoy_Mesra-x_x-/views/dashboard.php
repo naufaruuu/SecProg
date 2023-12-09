@@ -4,7 +4,9 @@
 use app\core\Session;
 use app\core\Application;
 session_start();
-
+if (!isset($_SESSION[Session::FLASH_KEY]['siswa'])) {
+    header("Location: login");
+}
 ?>
 
 <!-- CONTENT START -->
