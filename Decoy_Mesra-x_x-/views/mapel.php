@@ -4,6 +4,8 @@ session_start();
 
 use app\core\Session;
 use app\core\Application;
+use app\core\form\Form;
+use app\core\form\Field;
 
 if (!isset($_SESSION[Session::FLASH_KEY]['siswa'])) {
     header("Location: login");
@@ -75,13 +77,13 @@ $row = $statement->fetch();
     </div>
   </div>
 </div>
-<form action="add_saran.php" method="POST">
-<div class="input-group mb-3 ms-4 d-flex flex-column">
-<label for="catatan_guru" class="form-label">Catatan untuk guru</label>
-<textarea class="form-control w-100" id="catatan_guru" name="catatan_guru" rows="3"></textarea>
-</div>
-<button class="btn btn-primary ms-4" type="submit">Submit</button>
-</form>
+<?php $form = Form::begin('', 'post', '') ?>
+  <div class="input-group mb-3 ms-4 d-flex flex-column">
+    <label for="catatan_guru" class="form-label">Catatan untuk guru</label>
+    <?php echo $form->field($model, 'Saran') ?>
+  </div>
+  <button class="btn btn-primary ms-4" type="submit">Submit</button>
+<?php Form::end() ?>
 </div>
 
 </div>

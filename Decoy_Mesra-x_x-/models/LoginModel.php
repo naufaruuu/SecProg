@@ -4,6 +4,7 @@ namespace app\models;
 use app\core\Model;
 use app\core\Application;
 use app\models\Siswa;
+use app\models\Guru;
 
 class LoginModel extends Model
 {
@@ -20,8 +21,8 @@ class LoginModel extends Model
 
     public function login(): bool
     {
-        $siswa = Siswa::findOne(['Nama_Siswa' => $this->Nama_Siswa]);
-        $guru = Guru::findOne(['Nama_Guru' => $this->Nama_Siswa]);
+        $siswa = Siswa::findOne(['Nama_Siswa' => $this->Nama_Siswa])->get();
+        $guru = Guru::findOne(['Nama_Guru' => $this->Nama_Siswa])->get();
         if (!$siswa && !$guru) {
             $this->addError('Nama_Siswa', 'User does not exist with this name');
             return false;

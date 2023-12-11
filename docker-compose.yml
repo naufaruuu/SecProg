@@ -35,22 +35,22 @@ services:
     networks:
       - tadika-network
 
-  # if you need to manage db easily
+        # if you need to manage db easily
 
-  # tadika_phpma:
-  #   container_name: tadika_phpma
-  #   image: phpmyadmin/phpmyadmin
-  #   ports:
-  #       - '8080:80'
-  #   restart: always
-  #   networks:
-  #     - tadika-network
-  #   environment:
-  #       PMA_HOST: tadika_db
-  #       PMA_USER: secureprog
-  #       PMA_PASSWORD: verysecure
-  #   depends_on:
-  #       - tadika_db
+  tadika_phpma:
+    container_name: tadika_phpma
+    image: phpmyadmin/phpmyadmin
+    ports:
+     - '8080:80'
+    restart: always
+    networks:
+     - tadika-network
+    environment:
+       PMA_HOST: tadika_db
+       PMA_USER: secureprog
+       PMA_PASSWORD: verysecure
+    depends_on:
+       - tadika_db
 
 networks:
   tadika-network:

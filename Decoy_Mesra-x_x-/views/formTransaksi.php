@@ -4,69 +4,72 @@ session_start();
 
 use app\core\Session;
 use app\core\Application;
+use app\core\form\Form;
+use app\models\Kelas;
+use app\models\Siswa;
 
+if (!isset($_SESSION[Session::FLASH_KEY]['guru'])) {
+    header("Location: login");
+}
 
 ?>
 <!-- CONTENT START -->
-    <form action="#" method="POST">
+  <?php $form = Form::begin('', 'post', '') ?>
     <div class="row m-3">
         <h1>Transaksi Input</h1>
         <div class="input-group mb-3">
             <div class="input-group-text">Kelas</div>
-            <select class="form-select disable" id="input_kelas" name="input_kelas" aria-label="inputkelas" disabled>
-                <?php
-                  $id_guru = $_SESSION[Session::FLASH_KEY]['guru']['value'];
+            <?php
+                $id_guru = $_SESSION[Session::FLASH_KEY]['guru']['value'];
+                $kelasObj = Kelas::findAll()
+                  ->join('Guru', "Kelas.ID_Guru = '$id_guru'")
+                  ->getAll();
 
-                  $sql = "SELECT Nama_Kelas FROM Kelas WHERE Kelas.ID_Guru='$id_guru'";
-                  $statement = Application::$app->db->pdo->prepare($sql);
-                  $statement->execute();
-                  $row = $statement->fetch();
-                    do {
-                      echo "<option selected>". $row['Nama_Kelas']. "</option>";
-                    } while($row = $statement->fetch()) 
-                ?>
-            </select>
+                $kelasOptions = [];
+                foreach($kelasObj as $kelas) {
+                    $kelasOptions[$kelas->Nama_Kelas] = $kelas->Nama_Kelas;
+                }
+                echo $form->field($model, 'Nama_Kelas')->selectField($kelasOptions);
+             ?>
         </div>
 
         <div class="input-group mb-3">
             <div class="input-group-text">Siswa</div>
-            <select class="form-select" id="input_anak" name="input_anak" aria-label="inputanak">
-                <?php
-                  $id_guru = $_SESSION[Session::FLASH_KEY]['guru']['value'];
-                  $sql = "SELECT Siswa.Nama_Siswa FROM Siswa, Kelas WHERE Siswa.ID_Kelas = Kelas.ID_Kelas AND Kelas.ID_Guru = '$id_guru'";
-                  $statement = Application::$app->db->pdo->prepare($sql);
-                  $statement->execute();
-                  $row = $statement->fetch();
-                    do {
+            <?php
+                $siswaObj = Siswa::findAll()
+                      ->join('Kelas',"Kelas.ID_Kelas = Siswa.ID_Kelas")
+                      ->join('Guru', "Kelas.ID_Guru = '$id_guru'")
+                      ->getAll();
 
-                      echo "<option selected>". $row['Nama_Siswa']. "</option>";
-                    } while($row = $statement->fetch()) 
+                $siswaOptions = [];
+                foreach($siswaObj as $siswa) {
+                    $siswaOptions[$siswa->ID_Siswa] = $siswa->Nama_Siswa;
+                }
 
-                ?>
-            </select>
+                echo $form->field($model, 'ID_Siswa')->selectField($siswaOptions);
+             ?>
         </div>
 
 
         <div class="input-group mb-3">
-            <input type="file" class="form-control" id="inputgambar" name="input_gambar"
-                aria-describedby="inputGroupFileAddon03" aria-label="Upload">
+            <?php echo $form->field($model, 'Image')->fileField() ?>
         </div>
 
-        <div class="input-group mb-3 d-flex flex-column">
+        <div class="input-group mb-3 ms-4 d-flex flex-column">
             <label for="deskripsi_transaksi" class="form-label">Deskripsi Transaksi</label>
-            <textarea class="form-control w-100" id="deskripsi_transaksi" name="deskripsi_transaksi" rows="3"></textarea>
+            <?php echo $form->field($model, 'Deskripsi_Transaksi')->textareaField(); ?>
         </div>
-        <div class="input-group mb-3 d-flex flex-column">
+        <div class="input-group mb-3 ms-4 d-flex flex-column">
             <label for="catatan_guru" class="form-label">Catatan Guru</label>
-            <textarea class="form-control w-100" id="catatan_guru" name="catatan_guru" rows="3"></textarea>
+            <?php echo $form->field($model, 'Catatan_Guru')->textareaField(); ?>
         </div>
-        <div class="input-group mb-3 d-flex flex-column">
+        <div class="input-group mb-3 ms-4 d-flex flex-column">
             <label for="input_makanan" class="form-label">Input Makanan</label>
-            <textarea class="form-control w-100" id="input_makanan" name="input_makanan" rows="3"></textarea>
+            <?php echo $form->field($model, 'Makanan')->textareaField(); ?>
         </div>
-    </div>
     <button class="btn btn-primary ms-4" type="submit">Submit</button>
-    </form>
+    </div>
+  <?php Form::end() ?>
 <!-- CONTENT END -->
 </body>
 
