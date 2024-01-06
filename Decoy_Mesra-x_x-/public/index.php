@@ -36,7 +36,6 @@ $app->router->get('/grading', [SiteController::class, 'grading']);
 $app->router->get('/saran', [SiteController::class, 'saran']);
 $app->router->get('/logout', [SiteController::class, 'formTransaksi']);
 $app->router->get('/login', [AuthController::class, 'login']);
-$app->router->get('/register', [AuthController::class, 'register']);
 $app->router->get('/logout', [SiteController::class, 'logout']);
 
 $app->router->post('/contact', [SiteController::class, 'handleContact']);

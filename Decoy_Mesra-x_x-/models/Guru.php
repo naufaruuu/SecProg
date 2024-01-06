@@ -11,6 +11,7 @@ class Guru extends DbModel
     public string $Jenis_Kelamin = '';
     public string $Alamat = '';
     public string $No_HP = '';
+    public string $Password = '';
 
     public static function tableName(): string
     {
@@ -20,7 +21,7 @@ class Guru extends DbModel
     public function attributes(): array
     {
         return ['ID_Guru', 'Nama_Guru', 'Jenis_Kelamin',
-                'Alamat', 'No_HP'];
+                'Alamat', 'No_HP', 'Password'];
     }
 
     public function primaryKey(): string

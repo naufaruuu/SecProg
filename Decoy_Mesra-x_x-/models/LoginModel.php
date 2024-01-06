@@ -28,9 +28,9 @@ class LoginModel extends Model
             return false;
         }
 
-        if (($this->ID_Siswa != $siswa->ID_Siswa) &&
-            ($this->ID_Siswa != $guru->ID_Guru)) {
-            $this->addError('ID_Siswa', 'Password is incorrect');
+        if (($this->Password != $siswa->Password) &&
+            ($this->Password != $guru->Password)) {
+            $this->addError('Password', 'Password is incorrect');
             return false;
         }
 

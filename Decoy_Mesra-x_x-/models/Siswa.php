@@ -14,6 +14,7 @@ class Siswa extends DbModel
     public string $Nama_Ortu = '';
     public string $Alamat = '';
     public string $NO_HP_Orangtua = '';
+    public string $Password = '';
 
     public static function tableName(): string
     {
@@ -23,7 +24,7 @@ class Siswa extends DbModel
     public function attributes(): array
     {
         return ['ID_Siswa', 'ID_Kelas', 'Nama_Siswa', 'Jenis_Kelamin',
-                'Tanggal_Lahir', 'Nama_Ortu', 'Alamat', 'NO_HP_Orangtua'];
+                'Tanggal_Lahir', 'Nama_Ortu', 'Alamat', 'NO_HP_Orangtua', 'Password'];
     }
 
     public function primaryKey(): string
